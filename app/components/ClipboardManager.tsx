@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useAuth } from './AuthProvider';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ClipboardManager() {
     const { history, sendText, clearText: authClearText } = useAuth();
@@ -79,23 +80,33 @@ export default function ClipboardManager() {
                         No history yet...
                     </div>
                 ) : (
-                    history.map((item, i) => (
-                        <div key={i} className="group bg-white dark:bg-[#1c1c1e] p-3 rounded-2xl shadow-sm border border-black/5 dark:border-white/5 flex gap-3 animate-in slide-in-from-bottom-2 duration-300">
-                            <div className="flex-1 text-[15px] text-gray-800 dark:text-gray-200 break-words whitespace-pre-wrap leading-snug">
-                                {item}
-                            </div>
-                            <button
-                                onClick={() => copyText(item, i)}
-                                className={`self-start p-2 rounded-xl transition-all ${copyFeedbackId === i ? 'bg-green-100 text-green-600' : 'bg-gray-100 dark:bg-[#2C2C2E] text-gray-500 hover:text-[#007AFF]'}`}
+                    <AnimatePresence mode="popLayout" initial={false}>
+                        {history.map((item, i) => (
+                            <motion.div
+                                key={i}
+                                layout
+                                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                                className="group bg-white dark:bg-[#1c1c1e] p-3 rounded-2xl shadow-sm border border-black/5 dark:border-white/5 flex gap-3"
                             >
-                                {copyFeedbackId === i ? (
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                ) : (
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                )}
-                            </button>
-                        </div>
-                    ))
+                                <div className="flex-1 text-[15px] text-gray-800 dark:text-gray-200 break-words whitespace-pre-wrap leading-snug">
+                                    {item}
+                                </div>
+                                <button
+                                    onClick={() => copyText(item, i)}
+                                    className={`self-start p-2 rounded-xl transition-all ${copyFeedbackId === i ? 'bg-green-100 text-green-600' : 'bg-gray-100 dark:bg-[#2C2C2E] text-gray-500 hover:text-[#007AFF]'} active:scale-95`}
+                                >
+                                    {copyFeedbackId === i ? (
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    ) : (
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    )}
+                                </button>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
                 )}
             </div>
 

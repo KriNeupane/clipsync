@@ -28,7 +28,7 @@ body {
   background: linear-gradient(to bottom,
       transparent,
       rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -39,18 +39,18 @@ body {
 */
 @layer utilities {
   .ios-card {
-    @apply bg-white dark:bg-[#1c1c1e] rounded-2xl shadow-sm border border-black/5 dark:border-white/5 backdrop-blur-xl;
+    @apply bg-white/80 dark:bg-[#1c1c1e]/80 rounded-3xl shadow-sm border border-black/5 dark:border-white/5 backdrop-blur-2xl backdrop-saturate-150;
   }
 
   .ios-btn-primary {
-    @apply bg-[#007AFF] text-white font-semibold rounded-xl active:opacity-70 transition-opacity disabled:opacity-50;
+    @apply bg-[#007AFF] text-white font-semibold rounded-2xl active:scale-95 transition-all disabled:opacity-50 tracking-tight shadow-sm;
   }
 
   .ios-btn-secondary {
-    @apply bg-[#E5E5EA] dark:bg-[#2C2C2E] text-black dark:text-white font-semibold rounded-xl active:opacity-70 transition-opacity;
+    @apply bg-[#E5E5EA] dark:bg-[#2C2C2E] text-black dark:text-white font-semibold rounded-2xl active:scale-95 transition-all tracking-tight;
   }
 
   .ios-input {
-    @apply bg-[#F2F2F7] dark:bg-[#2C2C2E] rounded-xl border-none focus:ring-0 text-[17px] placeholder-gray-400;
+    @apply bg-[#767680]/12 dark:bg-[#767680]/24 rounded-xl border-none focus:ring-2 focus:ring-[#007AFF]/50 text-[17px] placeholder-gray-500 dark:placeholder-gray-400 leading-relaxed tracking-tight;
   }
 }

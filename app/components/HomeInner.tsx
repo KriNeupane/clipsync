@@ -16,6 +16,8 @@ import FileManager from './FileManager';
 // Actually, 'page.tsx' can be client if we rename the original logic or pass data.
 // Let's make a new wrapper component.
 
+import AnimatedBackground from './AnimatedBackground';
+
 export default function Home() {
     const { isAuthenticated } = useAuth();
     const { theme, toggleTheme } = useTheme();
@@ -26,6 +28,7 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center p-6 relative overflow-hidden bg-white dark:bg-black transition-colors duration-500 pt-20">
+            <AnimatedBackground />
 
             {/* Header / Controls */}
             <div className="absolute top-4 right-4 flex gap-3 z-50">
@@ -66,8 +69,7 @@ export default function Home() {
 
             </div>
 
-            {/* Background Decor */}
-            <div className="fixed top-0 left-0 w-full h-[300px] bg-gradient-to-b from-blue-50/50 dark:from-blue-900/10 to-transparent -z-10 pointer-events-none" />
+
         </main>
     );
 }
