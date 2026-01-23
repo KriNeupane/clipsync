@@ -25,7 +25,6 @@ export default function Home() {
     }
 
     return (
-    return (
         <main className="flex min-h-screen flex-col items-center p-6 relative overflow-hidden bg-white dark:bg-black transition-colors duration-500 pt-20">
 
             {/* Header / Controls */}
