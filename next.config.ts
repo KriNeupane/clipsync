@@ -1,12 +1,8 @@
 import path from "path";
 
-const nextConfig = {
-  /* config options here */
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
+/* config options here */
+typescript: {
+  ignoreBuildErrors: true,
   },
 };
 
