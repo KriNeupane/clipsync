@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from './AuthProvider';
 
 export default function ClipboardManager() {
@@ -8,37 +8,7 @@ export default function ClipboardManager() {
     const [inputText, setInputText] = useState('');
     const [copyFeedbackId, setCopyFeedbackId] = useState<number | null>(null);
 
-    // Auto-read clipboard on window focus
-    useEffect(() => {
-        const checkClipboard = async () => {
-            if (!navigator.clipboard || !document.hasFocus()) return;
-            try {
-                const text = await navigator.clipboard.readText();
-                if (text && (!history.length || history[0] !== text)) {
-                    // We found new text in the clipboard? 
-                    // Wait, we shouldn't auto-send JUST because we focused, 
-                    // unless we want to "Sync from this device".
-                    // User might just be looking. 
-                    // BETTER UX: "Auto-sync" toggle? Or just strict manual implementation first?
-                    // User Request: "I want this to work... like local host".
-                    // Local host auto-synced.
-                    // So we SHOULD auto-sync.
-
-                    sendText(text);
-                }
-            } catch (e) {
-                // Permission denied or empty
-            }
-        };
-
-        window.addEventListener('focus', checkClipboard);
-        // Also check on load?
-        // checkClipboard(); 
-
-        return () => {
-            window.removeEventListener('focus', checkClipboard);
-        };
-    }, [history, sendText]);
+    // Auto-read removed for privacy as per user request
 
     const copyText = async (text: string, index: number) => {
         try {

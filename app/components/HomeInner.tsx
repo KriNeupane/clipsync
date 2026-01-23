@@ -32,12 +32,11 @@ export default function Home() {
                 {/* Disconnect Button where user can "Logout" of the session */}
                 <button
                     onClick={() => window.location.reload()}
-                    /* Ideally we use a proper disconnect method, but a reload clears the in-memory socket and state for now since we don't persist automatically anymore. 
-                       Actually, AuthProvider state is memory only. Reload works perfect. */
-                    className="p-3 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:scale-105 transition-transform shadow-sm"
+                    className="flex items-center gap-2 px-3 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:scale-105 transition-transform shadow-sm font-medium text-sm"
                     title="Leave Session"
                 >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <span>Exit</span>
                 </button>
 
                 {/* Theme Toggle */}
@@ -60,7 +59,7 @@ export default function Home() {
                 {/* We might want to allow toggling this visibility for security on the phone, but for now it's fine */}
                 <ConnectionInfo />
 
-                <div className="flex flex-col lg:flex-row gap-8 w-full justify-center">
+                <div className="flex flex-col lg:flex-row gap-8 w-full justify-center items-center lg:items-start">
                     <ClipboardManager />
                     <FileManager />
                 </div>
