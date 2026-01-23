@@ -1,26 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 242, 242, 247;
+  /* iOS System Gray 6 (Light) */
+  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 5, 5, 5;
+    --background-end-rgb: 20, 20, 20;
+    /* iOS Dark System Background */
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 
+  In Tailwind v4, @apply works better when mapped to theme variables or just used directly.
+  For simplicity and compatibility, we will keep these utility classes but ensure they use valid utilities.
+*/
+@layer utilities {
+  .ios-card {
+    @apply bg-white dark:bg-[#1c1c1e] rounded-2xl shadow-sm border border-black/5 dark:border-white/5 backdrop-blur-xl;
+  }
+
+  .ios-btn-primary {
+    @apply bg-[#007AFF] text-white font-semibold rounded-xl active:opacity-70 transition-opacity disabled:opacity-50;
+  }
+
+  .ios-btn-secondary {
+    @apply bg-[#E5E5EA] dark:bg-[#2C2C2E] text-black dark:text-white font-semibold rounded-xl active:opacity-70 transition-opacity;
+  }
+
+  .ios-input {
+    @apply bg-[#F2F2F7] dark:bg-[#2C2C2E] rounded-xl border-none focus:ring-0 text-[17px] placeholder-gray-400;
+  }
 }
