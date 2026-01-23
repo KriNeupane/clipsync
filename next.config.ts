@@ -1,8 +1,9 @@
 import path from "path";
 
-/* config options here */
-typescript: {
-  ignoreBuildErrors: true,
+const nextConfig = {
+  /* config options here */
+  typescript: {
+    ignoreBuildErrors: true,
   },
 };
 
