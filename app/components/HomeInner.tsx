@@ -52,7 +52,7 @@ export default function Home() {
                 </button>
             </div>
 
-            <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex flex-col">
+            <div className="z-10 w-full max-w-5xl flex flex-col items-center gap-8 font-mono text-sm">
 
                 {/* Connection Box (Host Info) */}
                 {/* We show this so the Host can see the code (it's inside ConnectionInfo now, populated by AuthContext) */}
