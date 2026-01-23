@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthProvider';
 
 export default function ClipboardManager() {
@@ -70,8 +70,18 @@ export default function ClipboardManager() {
         setInputText('');
     };
 
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setInputText(e.target.value);
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+        }
+    };
+
     return (
-        <div className="ios-card w-full max-w-md overflow-hidden flex flex-col h-[500px]">
+        <div className="ios-card w-full max-w-md overflow-hidden flex flex-col h-auto min-h-[300px] max-h-[70vh]">
             {/* Header */}
             <div className="p-4 border-b border-black/5 dark:border-white/5 flex justify-between items-center bg-gray-50/80 dark:bg-zinc-900/80 backdrop-blur-md z-10">
                 <h2 className="text-[17px] font-semibold text-gray-900 dark:text-white">Shared Text</h2>
@@ -95,7 +105,7 @@ export default function ClipboardManager() {
             {/* History List */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-black/10">
                 {history.length === 0 ? (
-                    <div className="h-full flex items-center justify-center text-gray-400 text-sm italic">
+                    <div className="h-full flex items-center justify-center text-gray-400 text-sm italic py-10">
                         No history yet...
                     </div>
                 ) : (
@@ -123,20 +133,27 @@ export default function ClipboardManager() {
             <div className="p-3 bg-white dark:bg-[#1c1c1e] border-t border-black/5 dark:border-white/5">
                 <div className="flex gap-2">
                     <textarea
+                        ref={textareaRef}
                         value={inputText}
-                        onChange={(e) => setInputText(e.target.value)}
+                        onChange={handleInput}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !e.shiftKey) {
                                 e.preventDefault();
                                 handleSend();
+                                // Reset height
+                                if (textareaRef.current) textareaRef.current.style.height = 'auto'; // or min-height default
                             }
                         }}
                         placeholder="Type and send..."
-                        className="flex-1 bg-[#F2F2F7] dark:bg-[#2C2C2E] rounded-xl px-4 py-3 text-[16px] focus:outline-none focus:ring-1 focus:ring-[#007AFF]/50 resize-none h-[50px] leading-tight custom-scrollbar"
+                        className="flex-1 bg-[#F2F2F7] dark:bg-[#2C2C2E] rounded-xl px-4 py-3 text-[16px] focus:outline-none focus:ring-1 focus:ring-[#007AFF]/50 resize-none min-h-[50px] max-h-[150px] leading-tight custom-scrollbar"
                         rows={1}
+                        style={{ height: '50px' }}
                     />
                     <button
-                        onClick={handleSend}
+                        onClick={() => {
+                            handleSend();
+                            if (textareaRef.current) textareaRef.current.style.height = 'auto';
+                        }}
                         disabled={!inputText.trim()}
                         className="ios-btn-primary w-[50px] flex items-center justify-center shrink-0 disabled:opacity-50 disabled:cursor-default"
                     >
