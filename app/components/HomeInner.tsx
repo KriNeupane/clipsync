@@ -26,10 +26,10 @@ export default function Home() {
 
     return (
     return (
-        <main className="flex min-h-screen flex-col items-center p-6 relative overflow-hidden bg-white dark:bg-black transition-colors duration-500">
+        <main className="flex min-h-screen flex-col items-center p-6 relative overflow-hidden bg-white dark:bg-black transition-colors duration-500 pt-20">
 
             {/* Header / Controls */}
-            <div className="absolute top-0 right-0 p-4 flex gap-3 z-50">
+            <div className="absolute top-4 right-4 flex gap-3 z-50">
                 {/* Disconnect Button where user can "Logout" of the session */}
                 <button
                     onClick={() => window.location.reload()}

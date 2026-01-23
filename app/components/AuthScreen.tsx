@@ -10,12 +10,34 @@ export default function AuthScreen() {
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    // Handle Keyboard Input
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (mode !== 'join') return;
+
+            if (e.key >= '0' && e.key <= '9') {
+                handleNum(e.key);
+            } else if (e.key === 'Backspace') {
+                handleBackspace();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [mode, code]); // Re-bind when code changes to avoid stale closure if not using functional updates, but handleNum uses state? 
+    // handleNum uses 'code' state directly: `const newCode = code + num;`
+    // So we need to include [code] in dependency or use functional state updates.
+    // Let's rely on the existing handlers but make sure dependencies are right.
+    // Better: Update handlers to use functional state so we don't need 'code' in deps?
+    // handleNum uses `code` var.
+    // Let's just include `code` in the dependency array.
+
     const handleCreate = async () => {
         setLoading(true);
         const newRoomId = await createSession();
         setLoading(false);
         if (newRoomId) {
-            // Success, AuthProvider will set isAuthenticated and we will move to Home
+            // Success
         } else {
             setError(true);
         }
