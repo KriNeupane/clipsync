@@ -37,6 +37,12 @@ export default function ClipboardManager() {
 
     const handleSend = () => {
         if (!inputText.trim()) return;
+
+        if (inputText.length > 20000) {
+            alert("Text is too long (max 20,000 characters). Please shorten it.");
+            return;
+        }
+
         sendText(inputText);
         setInputText('');
     };

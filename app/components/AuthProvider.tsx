@@ -1,7 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useMutation, useQuery, useConvex } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -11,7 +12,6 @@ interface AuthContextType {
     joinSession: (code: string) => Promise<boolean>;
     sendText: (text: string) => void;
     clearText: () => void;
-    socket: Socket | null;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -22,75 +22,83 @@ const AuthContext = createContext<AuthContextType>({
     joinSession: async () => false,
     sendText: () => { },
     clearText: () => { },
-    socket: null,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [socket, setSocket] = useState<Socket | null>(null);
     const [roomId, setRoomId] = useState<string | null>(null);
-    const [history, setHistory] = useState<string[]>([]);
 
-    useEffect(() => {
-        // Connect socket
-        const s = io();
-        setSocket(s);
+    // Convex Hooks
+    const createRoomMutation = useMutation(api.rooms.createRoom);
+    const addClipMutation = useMutation(api.rooms.addClip);
+    const clearHistoryMutation = useMutation(api.rooms.clearHistory);
 
-        s.on('history-update', (newHistory: string[]) => {
-            setHistory(newHistory);
-        });
+    // Subscribe to room data if we have a roomId
+    // skip: !roomId is automatic if we pass skip or just handle null inside
+    // Convex queries are reactive.
+    const roomData = useQuery(api.rooms.getRoom, roomId ? { code: roomId } : "skip");
 
-        return () => {
-            s.disconnect();
-        };
-    }, []);
+    const history = roomData?.history || [];
 
-    const createSession = (): Promise<string | null> => {
-        return new Promise((resolve) => {
-            if (!socket) return resolve(null);
+    // Persist session (optional: simple localStorage check could go here)
 
-            socket.emit('create-session', (response: { success: boolean, roomId: string }) => {
-                if (response.success) {
-                    setRoomId(response.roomId);
-                    setIsAuthenticated(true);
-                    resolve(response.roomId);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
+    const createSession = async (): Promise<string | null> => {
+        try {
+            const code = await createRoomMutation({});
+
+            // Track locally created sessions
+            const created = JSON.parse(localStorage.getItem('clipsync_created_sessions') || '[]');
+            created.push(code);
+            localStorage.setItem('clipsync_created_sessions', JSON.stringify(created));
+
+            setRoomId(code);
+            setIsAuthenticated(true);
+            return code;
+        } catch (e) {
+            console.error("Failed to create session", e);
+            return null;
+        }
     };
 
-    const joinSession = (code: string): Promise<boolean> => {
-        return new Promise((resolve) => {
-            if (!socket) return resolve(false);
+    const convex = useConvex();
 
-            socket.emit('join-session', code, (response: { success: boolean }) => {
-                if (response.success) {
-                    setRoomId(code);
-                    setIsAuthenticated(true);
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            });
-        });
+    const joinSession = async (code: string): Promise<boolean> => {
+        try {
+            // Prevent joining own session (same device)
+            const created = JSON.parse(localStorage.getItem('clipsync_created_sessions') || '[]');
+            if (created.includes(code)) {
+                alert("You created this session on this device. Please use a different device to join.");
+                return false;
+            }
+
+            const room = await convex.query(api.rooms.getRoom, { code });
+
+            if (room) {
+                setRoomId(code);
+                setIsAuthenticated(true);
+                return true;
+            }
+            return false;
+        } catch (e) {
+            console.error("Error joining session:", e);
+            return false;
+        }
     };
 
     const sendText = (text: string) => {
-        if (socket && roomId) {
-            socket.emit('send-text', text, roomId);
+        if (roomId) {
+            addClipMutation({ code: roomId, text });
         }
     };
 
     const clearText = () => {
-        if (socket && roomId) {
-            socket.emit('clear-text', roomId);
+        if (roomId) {
+            clearHistoryMutation({ code: roomId });
         }
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, roomId, history, createSession, joinSession, sendText, clearText, socket }}>
+        <AuthContext.Provider value={{ isAuthenticated, roomId, history, createSession, joinSession, sendText, clearText }}>
             {children}
         </AuthContext.Provider>
     );

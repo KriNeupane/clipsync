@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./components/Providers";
@@ -19,16 +19,14 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "ClipSync",
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   themeColor: "#F2F2F7",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({

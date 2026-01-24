@@ -75,19 +75,14 @@ export default function FileManager() {
 
             <div className="ios-card overflow-hidden">
                 {/* Upload Button */}
-                <label className="block w-full cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border-b border-gray-100 dark:border-white/5 active:bg-gray-100">
-                    <div className="py-4 px-4 flex items-center justify-center gap-2">
-                        {uploading ? (
-                            <span className="text-[17px] text-gray-400">Uploading...</span>
-                        ) : (
-                            <>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                                <span className="text-[17px] font-medium text-[#007AFF]">Upload File</span>
-                            </>
-                        )}
+                {/* Upload Button */}
+                <div className="block w-full border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5">
+                    <div className="py-4 px-4 flex items-center justify-center gap-2 cursor-not-allowed opacity-60">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                        <span className="text-[15px] font-medium text-gray-500">File Uploads Disabled (Vercel)</span>
                     </div>
-                    <input type="file" className="hidden" onChange={handleUpload} disabled={uploading} />
-                </label>
+                    {/* <input type="file" className="hidden" onChange={handleUpload} disabled={uploading} /> */}
+                </div>
 
                 {/* File List */}
                 <div className="max-h-[300px] overflow-y-auto">

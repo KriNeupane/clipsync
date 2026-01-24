@@ -28,12 +28,22 @@ export const getRoom = query({
 export const addClip = mutation({
     args: { code: v.string(), text: v.string() },
     handler: async (ctx, args) => {
+        // Validation: Text Limit (20k chars)
+        if (args.text.length > 20000) {
+            throw new Error("Text too long (max 20,000 characters)");
+        }
+
         const room = await ctx.db
             .query("rooms")
             .withIndex("by_code", (q) => q.eq("code", args.code))
             .first();
 
         if (!room) return;
+
+        // Deduplication: Ignore if identical to the most recent clip
+        if (room.history.length > 0 && room.history[0] === args.text) {
+            return;
+        }
 
         // Add new clip to start of history, limit to 50 items
         const newHistory = [args.text, ...room.history].slice(0, 50);
