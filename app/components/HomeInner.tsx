@@ -17,6 +17,7 @@ import FileManager from './FileManager';
 // Let's make a new wrapper component.
 
 import AnimatedBackground from './AnimatedBackground';
+import InstallPrompt from './InstallPrompt';
 
 export default function Home() {
     const { isAuthenticated, terminateSession, isHost, clearText } = useAuth();
@@ -40,6 +41,7 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center p-6 relative overflow-hidden bg-white dark:bg-black transition-colors duration-500 pt-20">
+            <InstallPrompt />
             <AnimatedBackground />
 
             {/* Header / Controls */}
