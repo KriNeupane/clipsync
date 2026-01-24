@@ -16,6 +16,15 @@ export const saveFile = mutation({
         size: v.number(),
     },
     handler: async (ctx, args) => {
+        const room = await ctx.db
+            .query("rooms")
+            .withIndex("by_code", (q) => q.eq("code", args.roomCode))
+            .first();
+
+        if (!room || room.status === 'closed') {
+            throw new Error("Session is closed or invalid");
+        }
+
         await ctx.db.insert("files", {
             storageId: args.storageId,
             name: args.name,

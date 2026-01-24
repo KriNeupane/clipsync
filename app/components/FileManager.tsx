@@ -122,16 +122,30 @@ export default function FileManager() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <a
-                                            href={file.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            download
+                                        <button
+                                            onClick={async () => {
+                                                try {
+                                                    const response = await fetch(file.url);
+                                                    const blob = await response.blob();
+                                                    const url = window.URL.createObjectURL(blob);
+                                                    const a = document.createElement('a');
+                                                    a.style.display = 'none';
+                                                    a.href = url;
+                                                    a.download = file.name;
+                                                    document.body.appendChild(a);
+                                                    a.click();
+                                                    window.URL.revokeObjectURL(url);
+                                                    document.body.removeChild(a);
+                                                } catch (e) {
+                                                    console.error('Download failed', e);
+                                                    window.open(file.url, '_blank');
+                                                }
+                                            }}
                                             className="bg-[#F2F2F7] dark:bg-[#3A3A3C] p-2 rounded-full text-[#007AFF] hover:opacity-80 transition-opacity"
                                             title="Download"
                                         >
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                        </a>
+                                        </button>
                                         <button
                                             onClick={() => handleDelete(file._id, file.storageId, file.name)}
                                             className="bg-[#F2F2F7] dark:bg-[#3A3A3C] p-2 rounded-full text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-colors"

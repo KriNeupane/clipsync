@@ -40,6 +40,10 @@ export const addClip = mutation({
 
         if (!room) return;
 
+        if (room.status === 'closed') {
+            throw new Error("Session is closed");
+        }
+
         // Deduplication: Ignore if identical to the most recent clip
         if (room.history.length > 0 && room.history[0] === args.text) {
             return;
