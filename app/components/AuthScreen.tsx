@@ -81,7 +81,7 @@ export default function AuthScreen() {
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
                     </div>
                     <h1 className="text-3xl font-bold mb-2">Clipboard</h1>
-                    <p className="text-gray-500 dark:text-gray-400">Sync clipboard & files securely</p>
+                    <p className="text-gray-500 dark:text-gray-400">No need to send emails to yourself again.</p>
                 </div>
 
                 <div className="flex flex-col gap-4 w-full max-w-xs">
