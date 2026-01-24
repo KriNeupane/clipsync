@@ -69,3 +69,20 @@ export const clearHistory = mutation({
         });
     },
 });
+
+export const closeRoom = mutation({
+    args: { code: v.string() },
+    handler: async (ctx, args) => {
+        const room = await ctx.db
+            .query("rooms")
+            .withIndex("by_code", (q) => q.eq("code", args.code))
+            .first();
+
+        if (!room) return;
+
+        await ctx.db.patch(room._id, {
+            status: 'closed',
+        });
+    },
+});
+

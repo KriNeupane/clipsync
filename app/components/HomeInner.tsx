@@ -19,12 +19,24 @@ import FileManager from './FileManager';
 import AnimatedBackground from './AnimatedBackground';
 
 export default function Home() {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, terminateSession, isHost, clearText } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
     if (!isAuthenticated) {
         return <AuthScreen />;
     }
+
+    const handleExit = () => {
+        if (isHost) {
+            if (confirm("End session for everyone?")) {
+                terminateSession();
+            }
+        } else {
+            if (confirm("Leave session?")) {
+                window.location.reload();
+            }
+        }
+    };
 
     return (
         <main className="flex min-h-screen flex-col items-center p-6 relative overflow-hidden bg-white dark:bg-black transition-colors duration-500 pt-20">
@@ -34,12 +46,12 @@ export default function Home() {
             <div className="absolute top-4 right-4 flex gap-3 z-50">
                 {/* Disconnect Button where user can "Logout" of the session */}
                 <button
-                    onClick={() => window.location.reload()}
+                    onClick={handleExit}
                     className="flex items-center gap-2 px-3 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:scale-105 transition-transform shadow-sm font-medium text-sm"
-                    title="Leave Session"
+                    title={isHost ? "End Session" : "Leave Session"}
                 >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    <span>Exit</span>
+                    <span>{isHost ? "End" : "Exit"}</span>
                 </button>
 
                 {/* Theme Toggle */}
