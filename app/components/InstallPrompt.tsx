@@ -43,7 +43,7 @@ export default function InstallPrompt() {
                                 C
                             </div>
                             <div>
-                                <h3 className="font-semibold text-black dark:text-white">Install ClipSync</h3>
+                                <h3 className="font-semibold text-black dark:text-white">Install Clipboard</h3>
                                 <p className="text-sm text-gray-500">Get the full app experience</p>
                             </div>
                         </div>

@@ -78,9 +78,9 @@ export default function AuthScreen() {
             <div className="flex flex-col items-center justify-center min-h-screen bg-[#F2F2F7] dark:bg-black text-black dark:text-white p-6 animate-in fade-in duration-500">
                 <div className="mb-12 text-center">
                     <div className="w-20 h-20 bg-[#007AFF] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/30">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
                     </div>
-                    <h1 className="text-3xl font-bold mb-2">ClipSync</h1>
+                    <h1 className="text-3xl font-bold mb-2">Clipboard</h1>
                     <p className="text-gray-500 dark:text-gray-400">Sync clipboard & files securely</p>
                 </div>
 

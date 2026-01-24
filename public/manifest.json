@@ -1,6 +1,6 @@
 {
-    "name": "ClipSync",
-    "short_name": "ClipSync",
+    "name": "Clipboard",
+    "short_name": "Clipboard",
     "description": "Seamlessly sync text and files.",
     "start_url": "/",
     "display": "standalone",

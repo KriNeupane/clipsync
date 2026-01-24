@@ -7,7 +7,7 @@ import ConvexClientProvider from "./components/ConvexClientProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ClipSync",
+  title: "Clipboard",
   description: "Seamlessly sync text and files.",
   manifest: "/manifest.json",
   icons: {
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "ClipSync",
+    title: "Clipboard",
   },
 };
 
