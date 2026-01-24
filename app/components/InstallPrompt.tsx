@@ -10,8 +10,10 @@ export default function InstallPrompt() {
         // Only run on client
         if (typeof window === 'undefined') return;
 
-        // Detect iOS
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+        // Detect iOS (iPhone, iPad, iPod) OR iPad/iPhone requesting desktop site (Macintosh + Touch)
+        const isIOS =
+            /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+            (navigator.userAgent.includes("Mac") && "ontouchend" in document);
 
         // Detect if already in standalone mode (installed)
         const isStandalone = (window.navigator as any).standalone;
