@@ -29,6 +29,8 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [roomId, setRoomId] = useState<string | null>(null);
     const [isHost, setIsHost] = useState(false);
 
     // Convex Hooks
