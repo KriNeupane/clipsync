@@ -32,6 +32,11 @@ export default function FileManager() {
         const file = e.target.files?.[0];
         if (!file || !roomId) return;
 
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File too large. Max size is 10MB.');
+            return;
+        }
+
         setUploading(true);
         setStatusMsg('Preparing...');
 
