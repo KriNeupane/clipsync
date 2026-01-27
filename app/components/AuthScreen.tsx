@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from './AuthProvider';
+import ThemeToggle from './ThemeToggle';
 
 export default function AuthScreen() {
     const { createSession, joinSession, roomId } = useAuth();
@@ -76,6 +77,7 @@ export default function AuthScreen() {
     if (mode === 'initial') {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-[#F2F2F7] dark:bg-black text-black dark:text-white p-6 animate-in fade-in duration-500">
+                <ThemeToggle className="absolute top-6 right-6 z-50" />
                 <div className="mb-12 text-center">
                     <div className="w-20 h-20 bg-[#007AFF] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/30">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
@@ -108,6 +110,7 @@ export default function AuthScreen() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-[#F2F2F7] dark:bg-black text-black dark:text-white p-6 animate-in slide-in-from-right-10 duration-500">
+            <ThemeToggle className="absolute top-6 right-6 z-50" />
 
             <button onClick={() => setMode('initial')} className="absolute top-6 left-6 p-2 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
