@@ -102,7 +102,6 @@ export default function FileManager() {
 
             <div className="ios-card overflow-hidden">
                 {/* Upload Button */}
-                {/* Upload Button with Dropzone */}
                 <div
                     {...getRootProps()}
                     className={`block w-full cursor-pointer transition-colors border-b border-gray-100 dark:border-white/5 active:bg-gray-100 outline-none

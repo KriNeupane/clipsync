@@ -1,28 +1,20 @@
 'use client';
 
 import { useAuth } from './AuthProvider';
-// import { useTheme } from './ThemeProvider'; // Removed as toggle is now in AuthScreen
+
 import ThemeToggle from './ThemeToggle';
 import AuthScreen from './AuthScreen';
 import ConnectionInfo from './ConnectionInfo';
 import ClipboardManager from './ClipboardManager';
 import FileManager from './FileManager';
 
-// We need to move the server-component text fetch to a client side fetch or pass it down?
-// Actually 'page.tsx' is a Server Component by default in Next.js App Router 
-// BUT we need it to be Client for useAuth hooks. 
-// So we will make this a Client Component. 
-// The original page.tsx was Server component fetching IPs. 
-// We will pass IPs as props from a Layout or just fetch them here?
-// Actually, 'page.tsx' can be client if we rename the original logic or pass data.
-// Let's make a new wrapper component.
+
 
 import AnimatedBackground from './AnimatedBackground';
 import InstallPrompt from './InstallPrompt';
 
 export default function Home() {
     const { isAuthenticated, terminateSession, isHost, clearText } = useAuth();
-    // const { theme, toggleTheme } = useTheme();
 
     if (!isAuthenticated) {
         return <AuthScreen />;
@@ -57,14 +49,11 @@ export default function Home() {
                     <span>{isHost ? "End" : "Exit"}</span>
                 </button>
                 <ThemeToggle className="bg-gray-100 dark:bg-zinc-800" />
-                {/* Theme Toggle moved to AuthScreen/Landing */}
             </div>
 
             <div className="z-10 w-full max-w-5xl flex flex-col items-center gap-8 font-mono text-sm">
 
                 {/* Connection Box (Host Info) */}
-                {/* We show this so the Host can see the code (it's inside ConnectionInfo now, populated by AuthContext) */}
-                {/* We might want to allow toggling this visibility for security on the phone, but for now it's fine */}
                 <ConnectionInfo />
 
                 <div className="flex flex-col lg:flex-row gap-8 w-full justify-center items-center lg:items-start">
