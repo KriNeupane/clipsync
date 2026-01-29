@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useMutation, useQuery } from 'convex/react';
+import { useDropzone } from 'react-dropzone';
 import { api } from '@/convex/_generated/api';
 import { useAuth } from './AuthProvider';
 
@@ -28,8 +29,7 @@ export default function FileManager() {
         }
     };
 
-    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
+    const uploadFile = useCallback(async (file: File) => {
         if (!file || !roomId) return;
 
         if (file.size > 10 * 1024 * 1024) {
@@ -74,10 +74,22 @@ export default function FileManager() {
             setStatusMsg('Error');
         } finally {
             setUploading(false);
-            e.target.value = '';
             setTimeout(() => setStatusMsg(''), 2000);
         }
-    };
+    }, [roomId, generateUploadUrl, saveFile]);
+
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+        if (acceptedFiles?.[0]) {
+            uploadFile(acceptedFiles[0]);
+        }
+    }, [uploadFile]);
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        multiple: false,
+        disabled: uploading,
+        noClick: false
+    });
 
     if (!roomId) return null;
 
@@ -90,19 +102,33 @@ export default function FileManager() {
 
             <div className="ios-card overflow-hidden">
                 {/* Upload Button */}
-                <label className="block w-full cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border-b border-gray-100 dark:border-white/5 active:bg-gray-100">
-                    <div className="py-4 px-4 flex items-center justify-center gap-2">
+                {/* Upload Button with Dropzone */}
+                <div
+                    {...getRootProps()}
+                    className={`block w-full cursor-pointer transition-colors border-b border-gray-100 dark:border-white/5 active:bg-gray-100 outline-none
+                        ${isDragActive ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' : 'hover:bg-gray-50 dark:hover:bg-white/5'}
+                    `}
+                >
+                    <input {...getInputProps()} />
+                    <div className="py-6 px-4 flex items-center justify-center gap-2">
                         {uploading ? (
                             <span className="text-[17px] text-gray-400">Uploading...</span>
-                        ) : (
+                        ) : isDragActive ? (
                             <>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                                <span className="text-[17px] font-medium text-[#007AFF]">Upload File</span>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#007AFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-bounce"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                <span className="text-[17px] font-medium text-[#007AFF]">Drop file to upload</span>
                             </>
+                        ) : (
+                            <div className="flex flex-col items-center">
+                                <div className="flex items-center gap-2">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                    <span className="text-[17px] font-medium text-[#007AFF]">Upload File</span>
+                                </div>
+                                <span className="text-[12px] text-gray-400 mt-1">or drag and drop here</span>
+                            </div>
                         )}
                     </div>
-                    <input type="file" className="hidden" onChange={handleUpload} disabled={uploading} />
-                </label>
+                </div>
 
                 {/* File List */}
                 <div className="max-h-[300px] overflow-y-auto">
