@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { useAuth } from './AuthProvider';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ShortcutHint, useKeyboardShortcut } from './KeyboardShortcutContext';
 
 export default function ClipboardManager() {
     const { history, sendText, clearText: authClearText } = useAuth();
@@ -34,6 +35,28 @@ export default function ClipboardManager() {
         }
         setTimeout(() => setCopyFeedbackId(null), 2000);
     };
+
+    // Add shortcuts for 1-9
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const target = e.target as HTMLElement;
+            // Ignore if input is focused
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return;
+
+            const key = e.key;
+            if (key >= '1' && key <= '9') {
+                const index = parseInt(key) - 1;
+                if (history[index]) {
+                    copyText(history[index], index);
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [history]); // Re-bind when history changes to have access to latest history items logic
+    // Actually copyText doesn't depend on stale state except setfeedback, so [history] is needed to read accurate history item at index.
+
 
     const handleSend = () => {
         if (!inputText.trim()) return;
@@ -108,6 +131,9 @@ export default function ClipboardManager() {
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                     ) : (
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    )}
+                                    {i < 9 && (
+                                        <ShortcutHint shortcut={`${i + 1}`} className="absolute -top-1 -right-1 scale-90" />
                                     )}
                                 </button>
                             </motion.div>

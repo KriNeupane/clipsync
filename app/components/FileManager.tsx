@@ -5,6 +5,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { useDropzone } from 'react-dropzone';
 import { api } from '@/convex/_generated/api';
 import { useAuth } from './AuthProvider';
+import { useKeyboardShortcut, ShortcutHint } from './KeyboardShortcutContext';
 
 export default function FileManager() {
     const { roomId } = useAuth();
@@ -84,12 +85,14 @@ export default function FileManager() {
         }
     }, [uploadFile]);
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
         onDrop,
         multiple: false,
         disabled: uploading,
         noClick: false
     });
+
+    useKeyboardShortcut('u', open);
 
     if (!roomId) return null;
 
@@ -106,9 +109,11 @@ export default function FileManager() {
                     {...getRootProps()}
                     className={`block w-full cursor-pointer transition-colors border-b border-gray-100 dark:border-white/5 active:bg-gray-100 outline-none
                         ${isDragActive ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' : 'hover:bg-gray-50 dark:hover:bg-white/5'}
+                        relative
                     `}
                 >
                     <input {...getInputProps()} />
+                    <ShortcutHint shortcut="U" className="absolute top-3 right-3" />
                     <div className="py-6 px-4 flex items-center justify-center gap-2">
                         {uploading ? (
                             <span className="text-[17px] text-gray-400">Uploading...</span>

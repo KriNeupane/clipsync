@@ -10,20 +10,21 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-    theme: 'light',
+    theme: 'dark',
     toggleTheme: () => { },
 });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-    const [theme, setTheme] = useState<Theme>('light');
+    const [theme, setTheme] = useState<Theme>('dark');
 
     useEffect(() => {
-        // Load saved theme or default to system
+        // Load saved theme or default to dark
         const saved = localStorage.getItem('clipsync_theme') as Theme;
         if (saved) {
             setTheme(saved);
             document.documentElement.classList.toggle('dark', saved === 'dark');
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        } else {
+            // Default to dark
             setTheme('dark');
             document.documentElement.classList.add('dark');
         }

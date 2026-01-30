@@ -1,6 +1,8 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useAuth } from './AuthProvider';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import ThemeToggle from './ThemeToggle';
 import AuthScreen from './AuthScreen';
@@ -12,13 +14,20 @@ import FileManager from './FileManager';
 
 import AnimatedBackground from './AnimatedBackground';
 import InstallPrompt from './InstallPrompt';
+import { KeyboardShortcutProvider, useKeyboardShortcut, ShortcutHint } from './KeyboardShortcutContext';
 
 export default function Home() {
-    const { isAuthenticated, terminateSession, isHost, clearText } = useAuth();
+    return (
+        <KeyboardShortcutProvider>
+            <HomeContent />
+        </KeyboardShortcutProvider>
+    );
+}
 
-    if (!isAuthenticated) {
-        return <AuthScreen />;
-    }
+function HomeContent() {
+    const { isAuthenticated, terminateSession, isHost, clearText } = useAuth();
+    const { toggleHints, showHints } = useKeyboardShortcut('', () => { }); // Just to get context values
+
 
     const handleExit = () => {
         if (isHost) {
@@ -32,6 +41,15 @@ export default function Home() {
         }
     };
 
+    useKeyboardShortcut('Escape', () => {
+        if (isAuthenticated) handleExit();
+    });
+
+    if (!isAuthenticated) {
+        return <AuthScreen />;
+    }
+
+
     return (
         <main className="flex min-h-screen flex-col items-center p-6 relative overflow-hidden bg-white dark:bg-black transition-colors duration-500 pt-20">
             <InstallPrompt />
@@ -42,14 +60,24 @@ export default function Home() {
                 {/* Disconnect Button where user can "Logout" of the session */}
                 <button
                     onClick={handleExit}
-                    className="flex items-center gap-2 px-3 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:scale-105 transition-transform shadow-sm font-medium text-sm"
+                    className="p-3 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:scale-105 transition-transform shadow-sm relative group"
                     title={isHost ? "End Session" : "Leave Session"}
                 >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    <span>{isHost ? "End" : "Exit"}</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <ShortcutHint shortcut="Esc" className="absolute top-full right-0 mt-3" />
                 </button>
-                <ThemeToggle className="bg-gray-100 dark:bg-zinc-800" />
+                <button
+                    onClick={toggleHints}
+                    className={`p-3 rounded-full transition-all shadow-sm hover:scale-105 ${showHints ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-white dark:bg-zinc-800 text-gray-600 dark:text-gray-300'}`}
+                    title="Toggle Keyboard Shortcuts (Ctrl + /)"
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M6 8h.001"></path><path d="M10 8h.001"></path><path d="M14 8h.001"></path><path d="M18 8h.001"></path><path d="M6 12h.001"></path><path d="M10 12h.001"></path><path d="M14 12h.001"></path><path d="M18 12h.001"></path><path d="M7 16h10"></path></svg>
+                </button>
+                <ThemeToggle />
             </div>
+
+
+
 
             <div className="z-10 w-full max-w-5xl flex flex-col items-center gap-8 font-mono text-sm">
 
