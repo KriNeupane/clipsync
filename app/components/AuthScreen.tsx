@@ -29,13 +29,7 @@ export default function AuthScreen() {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [mode, code]); // Re-bind when code changes to avoid stale closure if not using functional updates, but handleNum uses state? 
-    // handleNum uses 'code' state directly: `const newCode = code + num;`
-    // So we need to include [code] in dependency or use functional state updates.
-    // Let's rely on the existing handlers but make sure dependencies are right.
-    // Better: Update handlers to use functional state so we don't need 'code' in deps?
-    // handleNum uses `code` var.
-    // Let's just include `code` in the dependency array.
+    }, [mode]); // Removed code from dependencies to prevent stale closures and missed keystrokes
 
     // Shortcuts
     useKeyboardShortcut('n', () => {
@@ -66,16 +60,20 @@ export default function AuthScreen() {
     };
 
     const handleNum = (num: string) => {
-        if (code.length < 6) {
-            const newCode = code + num;
-            setCode(newCode);
-            setError(false);
-
-            if (newCode.length === 6) {
-                handleSubmit(newCode);
+        setCode(prev => {
+            if (prev.length < 6) {
+                return prev + num;
             }
-        }
+            return prev;
+        });
+        setError(false);
     };
+
+    useEffect(() => {
+        if (code.length === 6) {
+            handleSubmit(code);
+        }
+    }, [code]);
 
     const handleBackspace = () => {
         setCode(prev => prev.slice(0, -1));
