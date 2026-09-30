@@ -139,6 +139,10 @@ export default function AuthScreen() {
 
 
                 </div>
+
+                <div className="absolute bottom-8 text-sm text-gray-400 dark:text-gray-500">
+                    Made by <a href="https://github.com/KriNeupane" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Kri Neupane</a>
+                </div>
             </div>
         );
     }
